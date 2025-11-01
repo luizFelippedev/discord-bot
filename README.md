@@ -191,6 +191,22 @@ Para produção, recomenda-se:
 
 ---
 
+## ☁️ Deploy no Render
+
+O repositório inclui um arquivo `render.yaml` que descreve o serviço como uma aplicação **web** Node.js (bot + dashboard no mesmo processo). Para publicar:
+
+1. Faça login no [Render](https://render.com) e crie um novo serviço via **Blueprint** apontando para este repositório.
+2. Confirme os comandos sugeridos:
+   - Build: `npm install && npm run build`
+   - Start: `npm run start`
+3. Defina as variáveis de ambiente na interface do Render (as principais já estão listadas no `render.yaml` com `sync: false` para preenchimento manual).
+4. Render define automaticamente a variável `PORT`. O dashboard lê esse valor via `.env` (fallback para 3000), então nenhuma ação extra é necessária.
+5. Se usar Prisma, garanta que `prisma/schema.prisma` está presente e rode `npx prisma generate` localmente antes do deploy (ou adicione ao comando de build). Caso contrário, o bot continuará funcionando apenas com MongoDB.
+
+> Dica: utilize um banco gerenciado (ex.: MongoDB Atlas) e ajuste `CALLBACK_URL` para a URL pública fornecida pelo Render.
+
+---
+
 ## 🖥 Dashboard Web
 
 | Rota             | Descrição                                            |
