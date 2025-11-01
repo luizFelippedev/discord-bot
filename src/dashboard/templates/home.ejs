@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard do Bot</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        margin: 0;
+      }
+      header,
+      main {
+        max-width: 960px;
+        margin: auto;
+        padding: 2rem;
+      }
+      a {
+        color: #38bdf8;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Dashboard do Bot</h1>
+      <p>Servidores: <%= guilds %> • Usuários: <%= users %></p>
+      <a href="/login">Entrar com Discord</a>
+    </header>
+  </body>
+</html>

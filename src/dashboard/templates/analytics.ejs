@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Analytics</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        margin: 0;
+      }
+      main {
+        max-width: 960px;
+        margin: auto;
+        padding: 2rem;
+      }
+      section {
+        background: rgba(30, 41, 59, 0.8);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+      }
+      h2 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Analytics</h1>
+      <% if (!data) { %>
+      <p>Nenhum dado disponível.</p>
+      <% } else { %>
+      <section>
+        <h2>Ranking de Economia</h2>
+        <ul>
+          <% data.economy.forEach((user, index) => { %>
+          <li><%= index + 1 %>. <%= user.username %> - <%= user.coins %> moedas</li>
+          <% }) %>
+        </ul>
+      </section>
+      <section>
+        <h2>Ranking de XP</h2>
+        <ul>
+          <% data.leveling.forEach((user, index) => { %>
+          <li><%= index + 1 %>. <%= user.username %> - nível <%= user.level %></li>
+          <% }) %>
+        </ul>
+      </section>
+      <section>
+        <h2>Gravações Recentes</h2>
+        <ul>
+          <% data.recordings.forEach((record) => { %>
+          <li><%= record.id %> - <%= record.participants.length %> participantes</li>
+          <% }) %>
+        </ul>
+      </section>
+      <% } %>
+    </main>
+  </body>
+</html>

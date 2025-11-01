@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Moderação</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        margin: 0;
+      }
+      main {
+        max-width: 960px;
+        margin: auto;
+        padding: 2rem;
+      }
+      section {
+        background: rgba(30, 41, 59, 0.8);
+        padding: 1.5rem;
+        border-radius: 12px;
+      }
+      h2 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Painel de Moderação</h1>
+      <section>
+        <h2>Últimos avisos</h2>
+        <ul>
+          <% warnings.forEach((warning) => { %>
+          <li>
+            Usuário: <%= warning.userId %> • Moderador: <%= warning.moderatorId %> • Motivo: <%= warning.reason %> • Data:
+            <%= warning.createdAt.toLocaleString() %>
+          </li>
+          <% }) %>
+          <% if (warnings.length === 0) { %>
+          <li>Nenhum aviso registrado.</li>
+          <% } %>
+        </ul>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Visão Geral</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: #e2e8f0;
+        margin: 0;
+      }
+      main {
+        max-width: 960px;
+        margin: auto;
+        padding: 2rem;
+      }
+      section {
+        background: rgba(30, 41, 59, 0.8);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+      }
+      h2 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Dashboard</h1>
+      <% if (!overview) { %>
+      <p>Nenhum dado disponível.</p>
+      <% } else { %>
+      <section>
+        <h2>Estatísticas Gerais</h2>
+        <ul>
+          <li>Membros: <%= overview.memberCount %></li>
+          <li>Online: <%= overview.onlineMembers %></li>
+          <li>Canais de texto: <%= overview.textChannels %></li>
+          <li>Canais de voz: <%= overview.voiceChannels %></li>
+          <li>Gravações: <%= overview.recordings %></li>
+          <li>Economia total: <%= overview.totalCoins %></li>
+        </ul>
+      </section>
+      <% } %>
+    </main>
+  </body>
+</html>
