@@ -1,0 +1,38 @@
+diff --git a/node_modules/@discordjs/voice/dist/index.js b/node_modules/@discordjs/voice/dist/index.js
+index c5dc0e9..59a12e9 100644
+--- a/node_modules/@discordjs/voice/dist/index.js
++++ b/node_modules/@discordjs/voice/dist/index.js
+@@ -513,7 +513,13 @@ var VoiceWebSocket = class extends import_node_events2.EventEmitter {
+ var CHANNELS = 2;
+ var TIMESTAMP_INC = 48e3 / 100 * CHANNELS;
+ var MAX_NONCE_SIZE = 2 ** 32 - 1;
+-var SUPPORTED_ENCRYPTION_MODES = ["xsalsa20_poly1305_lite", "xsalsa20_poly1305_suffix", "xsalsa20_poly1305"];
++var SUPPORTED_ENCRYPTION_MODES = [
++  "aead_aes256_gcm_rtpsize",
++  "aead_xchacha20_poly1305_rtpsize",
++  "xsalsa20_poly1305_lite",
++  "xsalsa20_poly1305_suffix",
++  "xsalsa20_poly1305"
++];
+ var nonce = import_node_buffer3.Buffer.alloc(24);
+ function stringifyState(state) {
+   return JSON.stringify({
+diff --git a/node_modules/@discordjs/voice/dist/index.mjs b/node_modules/@discordjs/voice/dist/index.mjs
+index dadce8a..2aad119 100644
+--- a/node_modules/@discordjs/voice/dist/index.mjs
++++ b/node_modules/@discordjs/voice/dist/index.mjs
+@@ -460,7 +460,13 @@ var VoiceWebSocket = class extends EventEmitter2 {
+ var CHANNELS = 2;
+ var TIMESTAMP_INC = 48e3 / 100 * CHANNELS;
+ var MAX_NONCE_SIZE = 2 ** 32 - 1;
+-var SUPPORTED_ENCRYPTION_MODES = ["xsalsa20_poly1305_lite", "xsalsa20_poly1305_suffix", "xsalsa20_poly1305"];
++var SUPPORTED_ENCRYPTION_MODES = [
++  "aead_aes256_gcm_rtpsize",
++  "aead_xchacha20_poly1305_rtpsize",
++  "xsalsa20_poly1305_lite",
++  "xsalsa20_poly1305_suffix",
++  "xsalsa20_poly1305"
++];
+ var nonce = Buffer4.alloc(24);
+ function stringifyState(state) {
+   return JSON.stringify({
