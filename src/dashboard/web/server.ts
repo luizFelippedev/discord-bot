@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Request, type Response, type NextFunction } from 'express';
 import session from 'express-session';
 import passport from 'passport';
 import { Strategy as DiscordStrategy, type Profile } from 'passport-discord';
@@ -24,11 +24,11 @@ export const startDashboard = (client: Client) => {
     return;
   }
 
-  passport.serializeUser((user: SerializedUser, done) => {
+  passport.serializeUser<SerializedUser>((user, done) => {
     done(null, user);
   });
 
-  passport.deserializeUser((obj: SerializedUser, done) => {
+  passport.deserializeUser<SerializedUser>((obj, done) => {
     done(null, obj);
   });
 
@@ -75,23 +75,23 @@ export const startDashboard = (client: Client) => {
   app.get(
     '/callback',
     passport.authenticate('discord', { failureRedirect: '/' }),
-    (_req, res) => {
+    (_req: Request, res: Response) => {
       res.redirect('/dashboard');
     }
   );
 
-  app.get('/logout', (req, res) => {
+  app.get('/logout', (req: Request, res: Response) => {
     req.logout(() => {
       res.redirect('/');
     });
   });
 
-  app.use((_req, res, next) => {
+  app.use((_req: Request, res: Response, next: NextFunction) => {
     res.locals.bot = client;
     next();
   });
 
-  app.get('/', (_req, res) => {
+  app.get('/', (_req: Request, res: Response) => {
     res.render('home', { guilds: client.guilds.cache.size, users: client.users.cache.size });
   });
 

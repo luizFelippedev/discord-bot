@@ -12,6 +12,7 @@ import {
   VoiceConnectionDisconnectReason,
   VoiceConnectionStatus
 } from '@discordjs/voice';
+import type { DiscordGatewayAdapterCreator } from '@discordjs/voice';
 import type {
   ChatInputCommandInteraction,
   Guild,
@@ -83,7 +84,7 @@ class GuildMusicManager {
     this.connection = joinVoiceChannel({
       channelId: channel.id,
       guildId: channel.guild.id,
-      adapterCreator: channel.guild.voiceAdapterCreator
+      adapterCreator: channel.guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator
     });
 
     this.connection.on('stateChange', async (_, newState) => {

@@ -1,4 +1,5 @@
 import { joinVoiceChannel, VoiceConnection, VoiceConnectionStatus, EndBehaviorType } from '@discordjs/voice';
+import type { DiscordGatewayAdapterCreator } from '@discordjs/voice';
 import type { Guild, Snowflake, VoiceBasedChannel, VoiceState } from 'discord.js';
 import { Collection } from 'discord.js';
 import { createWriteStream, existsSync } from 'node:fs';
@@ -68,7 +69,7 @@ export class VoiceRecordingService {
     const connection = joinVoiceChannel({
       channelId: channel.id,
       guildId: channel.guild.id,
-      adapterCreator: channel.guild.voiceAdapterCreator,
+      adapterCreator: channel.guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator,
       selfDeaf: false,
       selfMute: true
     });

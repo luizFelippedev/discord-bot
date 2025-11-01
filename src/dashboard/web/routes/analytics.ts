@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import { Router, type Request, type Response } from 'express';
 import { VoiceRecordRepository } from '../../../database/repositories/recordRepository.js';
 
 const router = Router();
 const voiceRecordRepository = new VoiceRecordRepository();
 
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
   const guild = req.app.locals.bot.guilds.cache.first();
 
   if (!guild) {
