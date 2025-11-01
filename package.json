@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "@discordjs/voice": "^0.16.1",
-    "@prisma/client": "^6.18.0",
     "axios": "^1.6.5",
     "chart.js": "^4.4.1",
     "colors": "^1.4.0",
@@ -45,7 +44,6 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "prettier": "^3.1.1",
-    "prisma": "^6.18.0",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3"

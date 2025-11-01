@@ -1,21 +1,17 @@
 import mongoose, { type ConnectOptions } from 'mongoose';
-import { PrismaClient } from '@prisma/client';
 import type { AppConfig } from './config.js';
 
 export class DatabaseManager {
-  public readonly prisma: PrismaClient | null;
   private mongoConnected = false;
 
-  constructor(private readonly config: AppConfig) {
-    this.prisma = this.createPrismaClient();
-  }
+  constructor(private readonly config: AppConfig) {}
 
   public async connect(): Promise<void> {
-    await Promise.all([this.connectMongo(), this.connectPrisma()]);
+    await this.connectMongo();
   }
 
   public async disconnect(): Promise<void> {
-    await Promise.all([this.disconnectMongo(), this.disconnectPrisma()]);
+    await this.disconnectMongo();
   }
 
   private async connectMongo(): Promise<void> {
@@ -40,32 +36,5 @@ export class DatabaseManager {
 
     await mongoose.disconnect();
     this.mongoConnected = false;
-  }
-
-  private async connectPrisma(): Promise<void> {
-    if (!this.prisma) return;
-    await this.prisma.$connect();
-  }
-
-  private async disconnectPrisma(): Promise<void> {
-    if (!this.prisma) return;
-    await this.prisma.$disconnect();
-  }
-
-  private createPrismaClient(): PrismaClient | null {
-    try {
-      return new PrismaClient({
-        datasources: {
-          db: {
-            url: this.config.database.prismaUrl
-          }
-        }
-      });
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Unknown Prisma initialization error';
-      console.warn(`[database] Prisma client disabled: ${message}`);
-      return null;
-    }
   }
 }

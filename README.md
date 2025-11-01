@@ -12,7 +12,6 @@ Um bot completo em TypeScript para Discord que combina música, moderação, eco
 - [Requisitos](#-requisitos)
 - [Configuração inicial](#-configuração-inicial)
   - [Variáveis de ambiente](#variáveis-de-ambiente)
-  - [Prisma (opcional)](#prisma-opcional)
 - [Instalação e execução](#-instalação-e-execução)
   - [Modo desenvolvimento](#modo-desenvolvimento)
   - [Build e produção](#build-e-produção)
@@ -62,7 +61,6 @@ src/
 - **Node.js** + **TypeScript** (ESM)
 - **discord.js v14**
 - **Mongoose** (MongoDB)
-- **Prisma** (opcional, para serviços que usem banco relacional)
 - **Express + EJS** (dashboard web)
 - **Passport Discord Strategy** (OAuth2)
 - **play-dl / @discordjs/voice / ffmpeg-static** (música e voz)
@@ -76,11 +74,10 @@ src/
 |-------------------|--------------------|---------------------------------------------------------|
 | Node.js           | ≥ 18               | O projeto usa `tsx watch` em modo ESM                   |
 | MongoDB           | ≥ 5                | Necessário para economia, níveis, moderação etc.        |
-| PostgreSQL*       | Opcional           | Apenas se for usar Prisma (ver seção seguinte)          |
 | FFmpeg            | ≥ 4                | `ffmpeg-static` já fornece binário, mas depende do SO   |
 | Conta Discord Bot | —                  | Token + client ID + secret para bot + OAuth2 dashboard  |
 
-\* Caso não utilize Prisma, o projeto continua operando normalmente apenas com MongoDB.
+
 
 ---
 
@@ -101,7 +98,6 @@ PREFIX=!
 
 # Banco de dados
 MONGODB_URI=mongodb://localhost:27017/discord-bot
-DATABASE_URL=postgresql://usuario:senha@localhost:5432/discordbot  # Opcional (Prisma)
 
 # Dashboard
 PORT=3000
@@ -124,35 +120,6 @@ FEATURE_LIVE_NOTIFICATION=true
 FEATURE_DASHBOARD=true
 ```
 
-### Prisma (opcional)
-
-Se desejar usar Prisma, complete `prisma/schema.prisma` com um `generator client` e pelo menos um `model`. Exemplo mínimo:
-
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-generator client {
-  provider = "prisma-client-js"
-}
-
-model Example {
-  id    Int     @id @default(autoincrement())
-  name  String
-  value Int
-}
-```
-
-Então execute:
-
-```bash
-npx prisma generate
-```
-
-> Se não houver modelos, o comando emite um aviso e não gera nada. O bot funciona mesmo sem essa etapa.
-
 ---
 
 ## 📦 Instalação e execução
@@ -172,7 +139,7 @@ npm run dev
 ```
 
 - Usa `tsx watch` para transpilar e reiniciar automaticamente.
-- Conecta MongoDB e (opcionalmente) Prisma na inicialização.
+- Conecta MongoDB na inicialização.
 - Faz login no Discord e registra comandos no server de desenvolvimento (se `GUILD_ID` estiver definido).
 - Sobe o dashboard em `http://localhost:3000`.
 
@@ -201,8 +168,6 @@ O repositório inclui um arquivo `render.yaml` que descreve o serviço como uma 
    - Start: `npm run start`
 3. Defina as variáveis de ambiente na interface do Render (as principais já estão listadas no `render.yaml` com `sync: false` para preenchimento manual).
 4. Render define automaticamente a variável `PORT`. O dashboard lê esse valor via `.env` (fallback para 3000), então nenhuma ação extra é necessária.
-5. Se usar Prisma, garanta que `prisma/schema.prisma` está presente e rode `npx prisma generate` localmente antes do deploy (ou adicione ao comando de build). Caso contrário, o bot continuará funcionando apenas com MongoDB.
-
 > Dica: utilize um banco gerenciado (ex.: MongoDB Atlas) e ajuste `CALLBACK_URL` para a URL pública fornecida pelo Render.
 
 ---
@@ -268,7 +233,7 @@ A lista abaixo destaca os principais comandos já implementados. Todos são slas
 | `EconomyService`           | Contabiliza moedas, prêmios, transações e ranking financeiro.   |
 | `LevelingService`          | Calcula XP, detecção de spam, concede níveis e cooldowns.       |
 | `DashboardService`         | Compila métricas para visualização no painel web.               |
-| `Guild/User/...Repository` | Camada de persistência com Mongoose/Prisma.                     |
+| `Guild/User/...Repository` | Camada de persistência com Mongoose.                            |
 
 Cada serviço é injetado no `Client` (via `ServiceRegistry`) e consumido por comandos/eventos específicos.
 
@@ -278,7 +243,7 @@ Cada serviço é injetado no `Client` (via `ServiceRegistry`) e consumido por co
 
 - `logs/` — arquivos de log (Winston) por data/nível.
 - `recordings/` — capturas de áudio e JSON de metadados.
-- `node_modules/.cache` — cache de compilação (ts-node, prisma, etc.).
+- `node_modules/.cache` — cache de compilação (ts-node, ferramentas diversas).
 - `dist/` — saída do `npm run build`.
 
 > A localização de logs e gravações pode ser alterada via `RECORDINGS_PATH`/`LOGS_PATH`.
@@ -287,22 +252,19 @@ Cada serviço é injetado no `Client` (via `ServiceRegistry`) e consumido por co
 
 ## ❓ Dúvidas frequentes
 
-**1. Posso rodar sem Prisma?**  
-Sim. O projeto tolera ausência do client Prisma; um aviso é emitido e somente funcionalidades dependentes dele ficam indisponíveis. Basta não usar comandos que precisem dele ou criar o schema e gerar o client posteriormente.
-
-**2. O tsconfig está em NodeNext. Posso trocar para CommonJS?**  
+**1. O tsconfig está em NodeNext. Posso trocar para CommonJS?**  
 Não recomendado, pois todo o código e dependências já assumem ESM. Manter `module`/`moduleResolution` em `NodeNext` evita problemas com `import`/`export`.
 
-**3. Os comandos não aparecem no Discord.**  
+**2. Os comandos não aparecem no Discord.**  
 Garanta que:
 - O bot está com `applications.commands` e permissões corretas.
 - `CLIENT_ID` corresponde ao app do bot.
 - Em desenvolvimento, defina `GUILD_ID` para registrar os comandos em um servidor específico (registro global pode levar até 1h para refletir).
 
-**4. Esbuild ou ffmpeg reclamam de plataforma errada.**  
+**3. Esbuild ou ffmpeg reclamam de plataforma errada.**  
 Exclua `node_modules` e rode `npm install` diretamente no SO onde o bot vai rodar. Não copie `node_modules` entre Windows/WSL/Linux/macOS.
 
-**5. Como alterar prefixo ou recursos habilitados?**  
+**4. Como alterar prefixo ou recursos habilitados?**  
 Use as variáveis `PREFIX` e `FEATURE_*` no `.env`. Os valores são lidos em tempo de execução.
 
 ---

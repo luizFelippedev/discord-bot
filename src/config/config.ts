@@ -11,7 +11,6 @@ export interface DiscordConfig {
 
 export interface DatabaseConfig {
   mongoUri: string;
-  prismaUrl: string;
 }
 
 export interface DashboardConfig {
@@ -83,8 +82,7 @@ export const loadConfig = (): AppConfig => {
       ownerId: required(process.env.OWNER_ID, 'OWNER_ID')
     },
     database: {
-      mongoUri: required(process.env.MONGODB_URI, 'MONGODB_URI'),
-      prismaUrl: required(process.env.DATABASE_URL, 'DATABASE_URL')
+      mongoUri: required(process.env.MONGODB_URI, 'MONGODB_URI')
     },
     dashboard: {
       port: parseNumber(process.env.PORT, 3000, 'PORT'),
